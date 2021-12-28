@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .caption {
-  @apply font-medium;
+  @apply my-3 font-medium;
 }
 .caption_hidden {
   @apply hidden;

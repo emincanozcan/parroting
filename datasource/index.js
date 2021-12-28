@@ -60,7 +60,8 @@ app.get("/generate", async (req, res) => {
   const videoData = {};
   youtubeRes.items.forEach((item) => {
     let duration = item.contentDetails.duration;
-    duration = duration.slice(2, -1);
+
+    duration = duration.replace("PT", "").replace("S", "");
     let durationInSec = 0;
 
     const hours = duration.split("H");
@@ -75,7 +76,9 @@ app.get("/generate", async (req, res) => {
       duration = minutes[1];
     }
 
-    durationInSec += parseInt(duration);
+    if (duration) {
+      durationInSec += parseInt(duration);
+    }
 
     videoData[item.id] = {
       youtubeId: item.id,
@@ -90,8 +93,7 @@ app.get("/generate", async (req, res) => {
     "python3 youtube-transcript-generator.py " + videoIds.join(" "),
     async (err, stdout, stderr) => {
       const captionsPath = stdout.replace("\n", "");
-      const captions = JSON.parse(fs.readFileSync(captionsPath, "utf-8"))[0];
-
+      const captions = JSON.parse(fs.readFileSync(captionsPath, "utf-8"));
       for (const videoId of videoIds) {
         captions[videoId].forEach((el) => {
           videoData[videoId]["captions"].push({
