@@ -19,7 +19,7 @@ mongoose
 // connect to mongodb
 
 app.get("/", async (req, res) => {
-  return res.json({ status: ok });
+  return res.json({ status: "ok" });
 });
 
 app.get("/clips", async (req, res) => {
