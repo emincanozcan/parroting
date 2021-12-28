@@ -9,7 +9,7 @@ function MainLayout({ children, videoIds }) {
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-4 h-full">
           <Link href="/">
             <a>
-              <h1 className="text-4xl font-black">English Imitation</h1>
+              <h1 className="text-4xl font-black">English Shadowing</h1>
             </a>
           </Link>
 

@@ -27,7 +27,7 @@ export default function Home({ videoList }) {
   return (
     <div>
       <Head>
-        <title>English Imitation</title>
+        <title>English Shadowing</title>
       </Head>
       <main>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">

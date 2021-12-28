@@ -1,5 +1,6 @@
 import YouTube from "react-youtube";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 function PlayPage({ video }) {
   const [player, setPlayer] = useState(undefined);
@@ -48,7 +49,6 @@ function PlayPage({ video }) {
   const handlePlayerStateChange = (e) => {
     setIsPlaying(player.getPlayerState() === 1 ? true : false);
   };
-
   const processCaptions = (currentVideoTime) => {
     for (let i = 0; i < video.captions.length; i++) {
       const caption = video.captions[i];
@@ -84,6 +84,11 @@ function PlayPage({ video }) {
 
   return (
     <div>
+      <Head>
+        <title>
+          {video.title.slice(0, 40 - video.title.length)} | English Shadowing
+        </title>
+      </Head>
       <div className="w-auto max-w-4xl mx-auto">
         <h1 className="mb-6 text-2xl truncate  font-bold">{video.title}</h1>
         {/* className={string} // defaults -> null */}
