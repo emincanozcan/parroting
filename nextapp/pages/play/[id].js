@@ -6,9 +6,7 @@ function PlayPage({ video }) {
   const [isPlaying, setIsPlaying] = useState(undefined);
   const [cursorLeft, setCursorLeft] = useState(0);
 
-  const [previousCaptionIndex, setPreviousCaptionIndex] = useState(undefined);
-  const [currentCaptionIndex, setCurrentCaptionIndex] = useState(undefined);
-  const [nextCaptionIndex, setNextCaptionIndex] = useState(undefined);
+  const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
 
   const handleOnReady = (e) => {
     setPlayer(e.target);
@@ -19,27 +17,24 @@ function PlayPage({ video }) {
       if (player && player.hasOwnProperty("getCurrentTime")) {
         processCaptions(player.getCurrentTime());
       }
-    }, 100);
+    }, 10);
     return () => clearInterval(interval);
   }, [player]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (player && player.hasOwnProperty("getCurrentTime")) {
-        setCursorLeft((100 * player.getCurrentTime()) / video.duration);
+        setCursorLeft(
+          (100 * (player.getCurrentTime() - video.startsAt)) / video.duration
+        );
       }
-    }, 100);
+    }, 50);
     return () => clearInterval(interval);
   }, [player]);
 
   const seekToCaption = (index) => {
     const caption = video.captions[index];
-
-    setPreviousCaptionIndex(index > 1 ? index - 1 : null);
-    setCurrentCaptionIndex(index);
-    setNextCaptionIndex(index < video.captions.length - 1 ? index + 1 : null);
-
-    player.seekTo(caption.starts_at, true);
+    player.seekTo(caption.startsAt, true);
   };
 
   const togglePlay = () => {
@@ -58,21 +53,22 @@ function PlayPage({ video }) {
     for (let i = 0; i < video.captions.length; i++) {
       const caption = video.captions[i];
       if (
-        caption.starts_at <= currentVideoTime &&
-        caption.ends_at >= currentVideoTime
+        caption.startsAt <= currentVideoTime &&
+        caption.startsAt + caption.duration >= currentVideoTime
       ) {
         setCurrentCaptionIndex(i);
-        setNextCaptionIndex(video.captions[i + 1] === undefined ? null : i + 1);
-        setPreviousCaptionIndex(
-          video.captions[i - 1] === undefined ? null : i - 1
-        );
         break;
       }
     }
   };
 
+  // TODO :update these
   const getCaptionleft = (index) => {
-    return (100 * video.captions[index].starts_at) / video.duration + "%";
+    return (
+      (100 * (video.captions[index].startsAt - video.startsAt)) /
+        video.duration +
+      "%"
+    );
   };
 
   const getCaptionWidth = (index) => {
@@ -80,8 +76,8 @@ function PlayPage({ video }) {
   };
 
   const getCaptionClassName = (index) => {
-    if (previousCaptionIndex === index) return "caption caption_previous";
-    if (nextCaptionIndex === index) return "caption caption_next";
+    if (currentCaptionIndex - 1 === index) return "caption caption_previous";
+    if (currentCaptionIndex + 1 === index) return "caption caption_next";
     if (currentCaptionIndex === index) return "caption caption_current";
     return "caption caption_hidden";
   };
@@ -111,6 +107,8 @@ function PlayPage({ video }) {
               showinfo: 0,
               enablejsapi: 0,
               rel: 0,
+              start: video.startsAt,
+              end: video.endsAt,
             },
           }}
           onReady={handleOnReady}
@@ -127,7 +125,7 @@ function PlayPage({ video }) {
           })}
         </div>
         <div className="flex items-center my-4 space-x-4">
-          <div className="relative w-full h-3 border-2 border-gray-300 box-content bg-slate-200">
+          <div className="relative w-full overflow-hidden h-3 border-2 border-gray-300 box-content bg-slate-200">
             <div
               style={{ left: cursorLeft + "%" }}
               className="absolute h-5 left-0 w-1.5 z-20 bg-red-600 rounded-md shadow-md -top-1 transition duration-100"
@@ -137,7 +135,7 @@ function PlayPage({ video }) {
                 <button
                   onClick={() => seekToCaption(index)}
                   key={caption._id}
-                  className="absolute h-3 bg-slate-600 hover:bg-indigo-600 border border-slate-300 transition"
+                  className="absolute h-3 bg-slate-600 hover:scale-y-150 hover:bg-indigo-600 border border-slate-300 transition"
                   style={{
                     width: getCaptionWidth(index),
                     left: getCaptionleft(index),
@@ -156,15 +154,15 @@ function PlayPage({ video }) {
             <div className="inline-block overflow-hidden rounded-md">
               <button
                 className="inline-flex items-center justify-center h-8 text-sm text-indigo-100 bg-indigo-700 border-r border-gray-800 disabled:opacity-50 w-14 transition duration-150 focus:shadow-outline hover:bg-indigo-800 focus:ring-2"
-                disabled={!Number.isInteger(previousCaptionIndex)}
-                onClick={() => seekToCaption(previousCaptionIndex)}
+                disabled={currentCaptionIndex === 0}
+                onClick={() => seekToCaption(currentCaptionIndex - 1)}
               >
                 Prev
               </button>
               <button
                 className="inline-flex disabled:opacity-50 justify-center items-center h-8 w-14 text-sm text-indigo-100 transition duration-150 bg-indigo-700  focus:shadow-outline hover:bg-indigo-800 focus:ring-2"
-                disabled={!Number.isInteger(nextCaptionIndex)}
-                onClick={() => seekToCaption(nextCaptionIndex)}
+                disabled={currentCaptionIndex >= video.captions.length - 1}
+                onClick={() => seekToCaption(currentCaptionIndex + 1)}
               >
                 Next
               </button>
@@ -177,11 +175,12 @@ function PlayPage({ video }) {
 }
 
 export async function getStaticPaths() {
-  const resp = await fetch("http://localhost");
-  let data = await resp.json();
-  const availableIds = data.videos.map((item) => item._id);
+  const data = (
+    await (await fetch(`${process.env.DATASOURCE_URL}clip-ids`)).json()
+  )["clipIds"];
+
   return {
-    paths: availableIds.map((id) => {
+    paths: data.map((id) => {
       return {
         params: {
           id: id,
@@ -193,24 +192,39 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const resp = await fetch("http://localhost");
-  let data = await resp.json();
+  const videoIds = (
+    await (await fetch(`${process.env.DATASOURCE_URL}clip-ids`)).json()
+  )["clipIds"];
 
-  // TODO: create an endpoint on backend for getOne item
-  const video = data.videos.filter((item) => item._id === params.id)[0];
-  video.captions = video.captions.map((caption) => {
-    caption.starts_at = parseFloat(caption.startsAt);
-    caption.duration = parseFloat(caption.duration);
-    caption.ends_at = caption.starts_at + caption.duration;
+  const clipData = await (
+    await fetch(`${process.env.DATASOURCE_URL}clips/${params.id}`)
+  ).json();
 
-    return caption;
-  });
+  const clip = clipData["clip"];
+  clip.captions = clip.youtubeVideoInfo.captions
+    .filter((caption) => {
+      const captionStartsAt = parseFloat(caption.startsAt);
+      const captionEndsAt = captionStartsAt + parseFloat(caption.duration);
 
-  const videoIds = data.videos.map((video) => video._id);
+      if (
+        (captionStartsAt >= clip.startsAt && captionStartsAt <= clip.endsAt) ||
+        (captionEndsAt >= clip.startsAt && captionEndsAt <= clip.endsAt)
+      ) {
+        return true;
+      }
+      return false;
+    })
+    .map((caption) => {
+      caption.duration = parseFloat(caption.duration);
+      caption.startsAt = parseFloat(caption.startsAt);
+      return caption;
+    });
+
+  clip.duration = clip.endsAt - clip.startsAt;
 
   return {
     props: {
-      video,
+      video: clip,
       videoIds,
     },
   };

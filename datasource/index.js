@@ -1,9 +1,7 @@
-import fs from "fs";
 import mongoose from "mongoose";
 import express from "express";
-import fetch from "node-fetch";
-import Video from "./models/video.js";
-import { exec } from "child_process";
+import Clip from "./models/clip.js";
+import fetchYoutubeVideoInfo from "./helpers/fetchYoutubeVideoInfo.js";
 
 const app = express();
 const mongoUrl =
@@ -21,95 +19,96 @@ mongoose
 // connect to mongodb
 
 app.get("/", async (req, res) => {
-  const videos = await Video.find({});
-  return res.json({ videos });
+  return res.json({ status: ok });
 });
 
+app.get("/clips", async (req, res) => {
+  const clips = await Clip.find({});
+  return res.json({ clips });
+});
+
+app.get("/clip-ids", async (req, res) => {
+  const clipIds = (await Clip.find({}, { _id: 1 })).map((c) => c._id);
+  return res.json({ clipIds });
+});
+
+app.get("/clips/:clipId", async (req, res) => {
+  const clip = await Clip.findById(req.params.clipId);
+  return res.json({ clip });
+});
+
+function baseVideo(youtubeId, clips = []) {
+  return { youtubeId, clips };
+}
+function getBaseVideos() {
+  return {
+    vst2S09Ekjc: baseVideo("vst2S09Ekjc"),
+    A3JCB49SlSo: baseVideo("A3JCB49SlSo", [
+      { startsAt: 1, endsAt: 31 },
+      { startsAt: 37, endsAt: 53 },
+    ]),
+    DpJ8vsgok0o: baseVideo("DpJ8vsgok0o"),
+    wizgxRBfVTY: baseVideo("wizgxRBfVTY"),
+    r8E1Hq5tktg: baseVideo("r8E1Hq5tktg"),
+    v1xXlxDHWPU: baseVideo("v1xXlxDHWPU"),
+    dqv5i2zpoco: baseVideo("dqv5i2zpoco"),
+    ji888wNv1jw: baseVideo("ji888wNv1jw"),
+    "3fbhVPnhX-4": baseVideo("3fbhVPnhX-4"),
+    LLGeo_HPNn4: baseVideo("LLGeo_HPNn4"),
+    "3Ml-JTgFW1I": baseVideo("3Ml-JTgFW1I"),
+    lpZBwCp8rYc: baseVideo("lpZBwCp8rYc"),
+    M6T69LFIg1k: baseVideo("M6T69LFIg1k"),
+    uLJPdI4f6wE: baseVideo("uLJPdI4f6wE"),
+    oBo5ANETAdk: baseVideo("oBo5ANETAdk"),
+    UUtBsDIvBjM: baseVideo("UUtBsDIvBjM"),
+    bhl6y3K_rFc: baseVideo("bhl6y3K_rFc"),
+    "v_bnu-6oOwc": baseVideo("v_bnu-6oOwc"),
+    "CPY-Ou8MR44": baseVideo("CPY-Ou8MR44"),
+    "5fZU0DQYV34": baseVideo("5fZU0DQYV34"),
+    "3vofUNJo8hQ": baseVideo("3vofUNJo8hQ"),
+    cwB5R5FOOvU: baseVideo("cwB5R5FOOvU"),
+    SIUi8GDUlaE: baseVideo("SIUi8GDUlaE"),
+    "kjYpHcJU-q0": baseVideo("kjYpHcJU-q0"),
+    UVrrZZPAkvY: baseVideo("UVrrZZPAkvY"),
+  };
+}
+
 app.get("/generate", async (req, res) => {
-  // const videoIds = req.query.youtubeIds;
-  // return res.send({ videoIds });
+  await Clip.deleteMany();
 
-  const videoIds = [
-    "vst2S09Ekjc",
-    "DpJ8vsgok0o",
-    "wizgxRBfVTY",
-    "r8E1Hq5tktg",
-    "v1xXlxDHWPU",
-    "dqv5i2zpoco",
-    "ji888wNv1jw",
-    "3fbhVPnhX-4",
-    "LLGeo_HPNn4",
-    "3Ml-JTgFW1I",
-    "lpZBwCp8rYc",
-    "M6T69LFIg1k",
-    "uLJPdI4f6wE",
-    "oBo5ANETAdk",
-    "UUtBsDIvBjM",
-    "bhl6y3K_rFc",
-  ];
-
-  const videoIdsJoined = videoIds.join(",");
-  const youtubeApiKey = process.env.YOUTUBE_API_KEY;
-  // TODO: Implement pagination
-  const youtubeRes = await (
-    await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoIdsJoined}&key=${youtubeApiKey}`
-    )
-  ).json();
-
-  const videoData = {};
-  youtubeRes.items.forEach((item) => {
-    let duration = item.contentDetails.duration;
-
-    duration = duration.replace("PT", "").replace("S", "");
-    let durationInSec = 0;
-
-    const hours = duration.split("H");
-    if (hours.length > 1) {
-      durationInSec += parseInt(hours[0]) * 60 * 60;
-      duration = hours[1];
-    }
-
-    const minutes = duration.split("M");
-    if (minutes.length > 1) {
-      durationInSec += parseInt(minutes[0]) * 60;
-      duration = minutes[1];
-    }
-
-    if (duration) {
-      durationInSec += parseInt(duration);
-    }
-
-    videoData[item.id] = {
-      youtubeId: item.id,
-      title: item.snippet.title,
-      duration: durationInSec,
-      statistics: item.statistics,
-      captions: [],
-    };
-  });
-
-  exec(
-    "python3 youtube-transcript-generator.py " + videoIds.join(" "),
-    async (err, stdout, stderr) => {
-      const captionsPath = stdout.replace("\n", "");
-      const captions = JSON.parse(fs.readFileSync(captionsPath, "utf-8"));
-      for (const videoId of videoIds) {
-        captions[videoId].forEach((el) => {
-          videoData[videoId]["captions"].push({
-            startsAt: el.start,
-            duration: el.duration,
-            text: el.text,
-          });
-        });
-      }
-
-      try {
-        const r = await Video.create(Object.values(videoData));
-        return res.json({ r });
-      } catch (e) {
-        return res.json({ e });
-      }
-    }
+  const baseVideoData = getBaseVideos();
+  const youtubeVideoInfo = await fetchYoutubeVideoInfo(
+    Object.keys(baseVideoData)
   );
+
+  const clipData = [];
+
+  Object.values(baseVideoData).forEach((video) => {
+    const youtubeData = youtubeVideoInfo[video.youtubeId];
+    if (video.clips.length > 0) {
+      video.clips.forEach((clip) => {
+        clipData.push({
+          youtubeId: video.youtubeId,
+          youtubeVideoInfo: youtubeData,
+          title: youtubeData.title,
+          startsAt: clip.startsAt,
+          endsAt: clip.endsAt,
+        });
+      });
+    } else {
+      clipData.push({
+        youtubeId: video.youtubeId,
+        youtubeVideoInfo: youtubeData,
+        title: youtubeData.title,
+        startsAt: 0,
+        endsAt: youtubeData.duration,
+      });
+    }
+  });
+  try {
+    const save = await Clip.create(clipData);
+    return res.json({ save });
+  } catch (e) {
+    return res.json({ e });
+  }
 });

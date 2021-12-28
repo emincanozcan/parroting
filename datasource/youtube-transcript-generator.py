@@ -10,7 +10,7 @@ path = f"/tmp/tt-{fileName}.json"
 finalData = {}
 for videoId in sys.argv[1:]:
     transcript_list = YouTubeTranscriptApi.list_transcripts(videoId)
-    t = transcript_list.find_manually_created_transcript(['en','en-US'])
+    t = transcript_list.find_manually_created_transcript(['en','en-US', 'en-GB'])
     t = t.fetch()
     finalData[videoId] = t
 # t = YouTubeTranscriptApi.get_transcripts(sys.argv[1:], languages=['en','en-US'])
