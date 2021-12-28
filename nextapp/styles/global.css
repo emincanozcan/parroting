@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.caption {
+  @apply font-medium;
+}
+.caption_hidden {
+  @apply hidden;
+}
+.caption_previous{
+  @apply text-gray-500;
+}
+.caption_next{
+  @apply text-gray-500;
+}
+.caption_current{
+  @apply text-lg text-gray-900;
+}
