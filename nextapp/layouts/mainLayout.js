@@ -2,7 +2,9 @@ import Head from "next/head";
 import Link from "next/link";
 
 function MainLayout({ children, videoIds }) {
-  const randomVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
+  const randomVideoId = videoIds
+    ? videoIds[Math.floor(Math.random() * videoIds.length)]
+    : 0;
   return (
     <div className="min-h-screen flex flex-col text-gray-800">
       <header className="border-b py-6 border-gray-300 shadow-2xl bg-white">

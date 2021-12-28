@@ -1,4 +1,5 @@
 import Head from "next/head";
+import MainLayout from "../layouts/mainLayout";
 import Link from "next/link";
 import Image from "next/image";
 function VideoCard({ video }) {
@@ -23,20 +24,22 @@ function VideoCard({ video }) {
     </Link>
   );
 }
-export default function Home({ videoList }) {
+export default function Home({ videoList, videoIds }) {
   return (
-    <div>
-      <Head>
-        <title>English Shadowing</title>
-      </Head>
-      <main>
-        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
-          {videoList.map((video) => (
-            <VideoCard key={video._id} video={video} />
-          ))}
-        </div>
-      </main>
-    </div>
+    <MainLayout videoIds={videoIds}>
+      <div>
+        <Head>
+          <title>English Shadowing</title>
+        </Head>
+        <main>
+          <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">
+            {videoList.map((video) => (
+              <VideoCard key={video._id} video={video} />
+            ))}
+          </div>
+        </main>
+      </div>
+    </MainLayout>
   );
 }
 
