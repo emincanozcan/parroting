@@ -71,7 +71,7 @@ app.get("/generate", async (req, res) => {
 
     const minutes = duration.split("M");
     if (minutes.length > 1) {
-      durationInSec += parseInt(minutes[0]) * 60 * 60;
+      durationInSec += parseInt(minutes[0]) * 60;
       duration = minutes[1];
     }
 
