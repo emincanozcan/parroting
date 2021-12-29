@@ -70,6 +70,44 @@ function getBaseVideos() {
     SIUi8GDUlaE: baseVideo("SIUi8GDUlaE"),
     "kjYpHcJU-q0": baseVideo("kjYpHcJU-q0"),
     UVrrZZPAkvY: baseVideo("UVrrZZPAkvY"),
+
+    "6XvmhE1J9PY": baseVideo("6XvmhE1J9PY"),
+    "984VkHzXl8w": baseVideo("984VkHzXl8w"),
+    "cdeXlrq-tNw": baseVideo("cdeXlrq-tNw"),
+    Ym6whrAw8wU: baseVideo("Ym6whrAw8wU"),
+    x6fIseKzzH0: baseVideo("x6fIseKzzH0"),
+    "2_AMEAnWyRk": baseVideo("2_AMEAnWyRk"),
+    IyPr0VCiqsI: baseVideo("IyPr0VCiqsI"),
+    "PYJ22-YYNW8": baseVideo("PYJ22-YYNW8"),
+    "rbZ4aLq4-Lg": baseVideo("rbZ4aLq4-Lg"),
+    xEhjqUkYgx0: baseVideo("xEhjqUkYgx0"),
+    _mUvG6x53VM: baseVideo("_mUvG6x53VM"),
+    "1GlKdGZcP1E": baseVideo("1GlKdGZcP1E", [{ startsAt: 0, endsAt: 105 }]),
+    mOF54rIIw0Q: baseVideo("mOF54rIIw0Q", [{ startsAt: 8, endsAt: 177 }]),
+    I6vQtLdDbKI: baseVideo("I6vQtLdDbKI", [{ startsAt: 59, endsAt: 216 }]),
+    uZuwFAQpgZc: baseVideo("uZuwFAQpgZc", [{ startsAt: 0, endsAt: 134 }]),
+    beEPuUq_RdY: baseVideo("beEPuUq_RdY", [{ startsAt: 3, endsAt: 140 }]),
+    _rdINNHLYaQ: baseVideo("_rdINNHLYaQ", [
+      { startsAt: 0, endsAt: 163, title: "Machine Learning" },
+    ]),
+
+    "4Ix5g6Ictvs": baseVideo("4Ix5g6Ictvs", [
+      { startsAt: 0, endsAt: 92, title: "Great Advice for New Graudates" },
+    ]),
+
+    "1k89OTpDvIU": baseVideo("1k89OTpDvIU", [
+      { startsAt: 12, endsAt: 142, title: "Creating DIY Projects - Fawn Qiu" },
+    ]),
+    "0eD6WEpCSPg": baseVideo("0eD6WEpCSPg", [
+      { startsAt: 0, endsAt: 102, title: "True Richness" },
+    ]),
+    "FI-oPZnPRqI": baseVideo("FI-oPZnPRqI", [
+      { startsAt: 7, endsAt: 113, title: "Improve Your Concentration" },
+    ]),
+    iyEbvehRPhY: baseVideo("iyEbvehRPhY", [{ startsAt: 1, endsAt: 151 }]),
+    "8Nf9npmu3Xg": baseVideo("8Nf9npmu3Xg", [
+      { startsAt: 0, endsAt: 113, title: "Manage Your Career with Urgency" },
+    ]),
   };
 }
 
