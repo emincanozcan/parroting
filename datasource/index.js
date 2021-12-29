@@ -23,7 +23,9 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/clips", async (req, res) => {
-  const clips = await Clip.find({});
+  const clips = (await Clip.find({})).sort(() =>
+    Math.random() > 0.5 ? 1 : -1
+  );
   return res.json({ clips });
 });
 
