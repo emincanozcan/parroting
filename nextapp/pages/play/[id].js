@@ -131,18 +131,18 @@ function PlayPage({ video, videoIds }) {
               );
             })}
           </div>
-          <div className="flex items-center my-4 space-x-4">
-            <div className="relative w-full overflow-hidden h-3 border-2 border-gray-300 box-content bg-slate-200">
+          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 items-center my-4 space-x-4">
+            <div className="relative w-full overflow-hidden h-5 border-2 border-gray-300 box-content bg-slate-200">
               <div
                 style={{ left: cursorLeft + "%" }}
-                className="absolute h-5 left-0 w-1.5 z-20 bg-red-600 rounded-md shadow-md -top-1 transition duration-100"
+                className="absolute h-7 left-0 w-1.5 z-20 bg-red-600 rounded-md shadow-md -top-1 transition duration-100"
               ></div>
               {video.captions.map((caption, index) => {
                 return (
                   <button
                     onClick={() => seekToCaption(index)}
                     key={caption._id}
-                    className="absolute h-3 bg-slate-600 hover:scale-y-150 hover:bg-indigo-600 border border-slate-300 transition"
+                    className="absolute h-5 bg-slate-600 hover:scale-y-150 hover:bg-indigo-600 border border-slate-300 transition"
                     style={{
                       width: getCaptionWidth(index),
                       left: getCaptionleft(index),

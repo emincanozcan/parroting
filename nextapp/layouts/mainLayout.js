@@ -19,17 +19,22 @@ function MainLayout({ children, videoIds }) {
           rel="stylesheet"
         />
       </Head>
-      <header className="border-b py-6 border-gray-300 shadow-2xl bg-white">
-        <div className="max-w-7xl w-full mx-auto flex items-center justify-between px-4 h-full">
+      <header className="border-b py-4 lg:py-6 border-gray-300 shadow-2xl bg-white">
+        <div className="max-w-7xl w-full mx-auto flex items-center space-x-4 justify-between px-4 h-full">
           <Link href="/">
             <a>
-              <h1 className="text-4xl font-extrabold">English Shadowing</h1>
+              <h1 className="text-lg md:text-3xl lg:text-4xl font-bold">
+                English Shadowing
+              </h1>
             </a>
           </Link>
 
-          <nav className="space-x-6">
+          <nav className="space-x-4 lg:space-x-6 flex-shrink-0">
             <Link href={`/play/${randomVideoId}`}>
-              <a>Random Video</a>
+              <a className="">Random Clip</a>
+            </Link>
+            <Link href={`/about`}>
+              <a className="">About</a>
             </Link>
           </nav>
         </div>
