@@ -11,10 +11,10 @@ export default function About({ videoIds }) {
         <h3>What is Shadowing?</h3>
         <p>
           Shadowing is a technique that is based on listening and repeating.
-          Think it like you are being a parrot 🦜. </br>If you are interested, there
-          are articles about this technique on the internet. It is also called{" "}
-          <i>Imitation</i> / <i>Echoing</i>, so you can use these keywords while
-          searching.
+          Think it like you are being a parrot 🦜. <br />
+          If you are interested, there are articles about this technique on the
+          internet. It is also called <i>Imitation</i> / <i>Echoing</i>, so you
+          can use these keywords while searching.
         </p>
         <h3>Why I Created It? What Is The Future Of Project?</h3>
         <p>
