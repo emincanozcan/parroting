@@ -75,7 +75,7 @@ async function fetchYoutubeVideoInfo(youtubeVideoIds) {
 
     let maxW = 0;
     Object.values(youtubeItem.snippet.thumbnails).forEach((thumbnail) => {
-      if (thumbnail.width > maxW) {
+      if (thumbnail.width > maxW && maxW < 720) {
         ret[youtubeItem.id].thumbnail = thumbnail.url;
         maxW = thumbnail.width;
       }
