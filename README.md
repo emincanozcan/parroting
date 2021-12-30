@@ -18,9 +18,6 @@ Shadowing is a technique that is based on listening and repeating. Think it like
 # Clone the repository
 $ git clone git@github.com:emincanozcan/parroting.git
 
-Open 
-# cd parroting/datasource
-
 # Cd into it
 $ cd parroting
 
@@ -30,7 +27,7 @@ $ cp .env.example .env
 # Open the .env file with your favorite text editor, and update the YOUTUBE_API_KEY field.
 
 # Up the project by Docker
-$ docker-compose up -d
+$ docker-compose up
 ```
 
 ## TechStack
