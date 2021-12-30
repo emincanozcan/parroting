@@ -88,7 +88,7 @@ function PlayPage({ video, videoIds }) {
       <div>
         <Head>
           <title>
-            {video.title.slice(0, 40 - video.title.length)} | English Shadowing
+            {video.title.slice(0, 40 - video.title.length)} | Parroting 🦜
           </title>
         </Head>
         <div className="w-auto max-w-4xl mx-auto">

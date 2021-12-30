@@ -29,7 +29,7 @@ export default function Home({ videoList, videoIds }) {
     <MainLayout videoIds={videoIds}>
       <div>
         <Head>
-          <title>English Shadowing</title>
+          <title>Parroting 🦜: English Shadowing</title>
         </Head>
         <main>
           <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4">

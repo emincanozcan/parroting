@@ -4,14 +4,17 @@ export default function About({ videoIds }) {
   return (
     <MainLayout videoIds={videoIds}>
       <article className="prose prose-slate md:prose-lg px-4 py-8 shadow-lg rounded-lg bg-white mx-auto prose-a:text-blue-700 hover:prose-a:text-blue-900 prose-a:transition-all">
-        <h2>About Project</h2>
+        <h2>About Parroting 🦜</h2>
+        Parroting is a website that helps people to improve their English
+        speaking fluency and pronunciation by using a technique called
+        `shadowing`.
         <h3>What is Shadowing?</h3>
         <p>
-          English shadowing is a name of a technique that listeners repeat an
-          English speaker. It helps to get better at speaking and pronunciation.
-          If you are interested, there are articles about this technique on the
-          internet. It is also called <i>Imitation</i> / <i>Echoing</i>, so you
-          can use these keywords while searching.
+          Shadowing is a technique that is based on listening and repeating.
+          Think it like you are being a parrot 🦜. </br>If you are interested, there
+          are articles about this technique on the internet. It is also called{" "}
+          <i>Imitation</i> / <i>Echoing</i>, so you can use these keywords while
+          searching.
         </p>
         <h3>Why I Created It? What Is The Future Of Project?</h3>
         <p>
