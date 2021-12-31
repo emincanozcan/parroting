@@ -2,7 +2,7 @@
 
 Parroting is a website that helps people to improve their speaking fluency and pronunciation by using a technique called `shadowing`.
 
-[https://parroting.emincanozcan.com/](Click here to visit the live demo for English version.)
+[Click here to visit the live demo for English version.](https://parroting.emincanozcan.com/)
 
 ## What Is Shadowing?
 
@@ -42,4 +42,4 @@ $ docker-compose up
 
 ## License
 
-[https://github.com/emincanozcan/parroting/blob/main/LICENSE](MIT)
+[MIT](https://github.com/emincanozcan/parroting/blob/main/LICENSE)
